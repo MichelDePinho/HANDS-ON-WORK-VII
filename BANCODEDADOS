@@ -1,0 +1,65 @@
+CREATE DATABASE hands_on_vii; 
+USE hands_on_vii;
+
+CREATE TABLE tipo_imovel (
+    id_tipo INT AUTO_INCREMENT PRIMARY KEY,
+    nome_tipo VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE imovel (
+    id_imovel INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_imovel INT NOT NULL UNIQUE,
+    descricao TEXT,
+    id_tipo INT,
+    FOREIGN KEY (id_tipo) REFERENCES tipo_imovel(id_tipo)
+);
+
+CREATE TABLE pagamento (
+    id_pagamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_imovel INT,
+    data_pagamento DATE NOT NULL,
+    valor_pagamento DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_imovel) REFERENCES imovel(id_imovel)
+);
+INSERT INTO tipo_imovel (nome_tipo) VALUES
+('Apartamento'), ('Casa'), ('Sala Comercial'), ('Galpão'), ('Terreno');
+INSERT INTO imovel (codigo_imovel, descricao, id_tipo) VALUES
+(1001, 'Apartamento 100m² em condomínio fechado', 1),
+(1002, 'Casa 3 quartos no centro', 2),
+(1003, 'Sala Comercial 40m² no shopping', 3),
+(1004, 'Galpão 500m² zona industrial', 4),
+(1005, 'Terreno 300m² bairro residencial', 5),
+(1006, 'Apartamento 80m² vista para o mar', 1),
+(1007, 'Casa 2 quartos com garagem', 2),
+(1008, 'Sala Comercial 25m² em prédio empresarial', 3);
+INSERT INTO pagamento (id_imovel, data_pagamento, valor_pagamento) VALUES
+(1, '2023-08-10', 5000),
+(1, '2023-09-10', 5000),
+(1, '2023-10-10', 5000),
+(2, '2023-08-15', 7000),
+(2, '2023-09-15', 7000),
+(2, '2023-10-15', 7000),
+(3, '2023-09-05', 3000),
+(3, '2023-10-05', 3000),
+(3, '2023-11-05', 3000),
+(4, '2023-08-20', 15000),
+(4, '2023-09-20', 15000),
+(5, '2023-11-01', 2000),
+(5, '2023-12-01', 2000),
+(6, '2023-08-12', 4500),
+(6, '2023-09-12', 4500),
+(7, '2023-10-18', 6000),
+(7, '2023-11-18', 6000),
+(8, '2023-12-03', 2500),
+(8, '2023-12-20', 2500);
+SELECT 
+    p.id_pagamento AS id_venda,
+    p.data_pagamento,
+    p.valor_pagamento,
+    i.codigo_imovel,
+    i.descricao,
+    t.nome_tipo AS tipo_imovel
+FROM pagamento p
+JOIN imovel i ON p.id_imovel = i.id_imovel
+JOIN tipo_imovel t ON i.id_tipo = t.id_tipo
+ORDER BY p.data_pagamento;
